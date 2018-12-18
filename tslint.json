@@ -1,0 +1,18 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:latest", "tslint-config-airbnb", "tslint-config-prettier"],
+  "jsRules": {},
+  "rules": {
+    "no-console": {
+      "severity": "warning",
+      "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
+    },
+    "ordered-imports": false,
+    "import-name": {
+      "severity": "warning"
+    },
+    "object-literal-sort-keys": false,
+    "no-submodule-imports": false
+  },
+  "rulesDirectory": []
+}

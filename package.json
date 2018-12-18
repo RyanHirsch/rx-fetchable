@@ -1,0 +1,51 @@
+{
+  "name": "rx-fetchable",
+  "version": "1.0.0",
+  "main": "dist/fetch.js",
+  "types": "dist/fetch.d.ts",
+  "author": "Ryan Hirsch <Ryan.Hirsch@gmail.com> (https://ryanhirsch.com/)",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/RyanHirsch/rx-fetchable"
+  },
+  "scripts": {
+    "prettier:base": "prettier --parser typescript",
+    "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
+    "prettier:write": "npm run prettier:base -- --write \"src/**/*.{ts,tsx}\"",
+    "start": "node dist/index.js",
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "lint": "tslint --project tsconfig.json 'src/**/*.ts'",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
+    "dev:watch": "ts-node-dev --respawn --no-notify src/index.ts"
+  },
+  "devDependencies": {
+    "@types/isomorphic-fetch": "^0.0.34",
+    "@types/jest": "^23.3.10",
+    "husky": "^1.2.1",
+    "jest": "^23.6.0",
+    "lint-staged": "^8.1.0",
+    "prettier": "^1.15.3",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^23.10.5",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "tsconfig-paths": "^3.7.0",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "tslint-config-prettier": "^1.17.0",
+    "typescript": "^3.2.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  },
+  "dependencies": {
+    "abort-controller": "^2.0.0",
+    "isomorphic-fetch": "^2.2.1",
+    "rxjs": "^6.3.3"
+  }
+}

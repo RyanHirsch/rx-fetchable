@@ -1,0 +1,14 @@
+.jest
+.vscode
+node_modules
+src
+.editorconfig
+.dockerignore
+.nvmrc
+.prettierrc
+.lintstagedrc
+Dockerfile
+jest.config.js
+tsconfig.json
+tslint.json
+yarn.lock
