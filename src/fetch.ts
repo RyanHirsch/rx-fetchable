@@ -6,7 +6,12 @@ export default function fetch(
   stringOrRequest: string | Request,
   init: RequestInit = {}
 ): Observable<Response> {
-  const controller = new AbortController();
+  // tslint:disable-next-line variable-name
+  const ACtrl =
+    typeof window !== "undefined" && "AbortController" in window
+      ? (window as any).AbortController
+      : AbortController;
+  const controller = new ACtrl();
 
   return new Observable(subscriber => {
     isomorphicFetch(stringOrRequest, { ...init, signal: controller.signal })
