@@ -1,33 +1,47 @@
 import AbortController from "abort-controller";
 import isomorphicFetch from "isomorphic-fetch";
-import { Observable } from "rxjs";
+import { Observable, Subscriber } from "rxjs";
 
 export default function fetch(
   stringOrRequest: string | Request,
   init: RequestInit = {}
 ): Observable<Response> {
-  // tslint:disable-next-line variable-name
-  const ACtrl =
-    typeof window !== "undefined" && "AbortController" in window
-      ? (window as any).AbortController
-      : AbortController;
-  const controller = new ACtrl();
+  return Observable.create((subscriber: Subscriber<Response>) => {
+    // tslint:disable-next-line variable-name
+    const ACtrl =
+      typeof window !== "undefined" && "AbortController" in window
+        ? (window as any).AbortController
+        : AbortController;
 
-  return new Observable(subscriber => {
-    isomorphicFetch(stringOrRequest, { ...init, signal: controller.signal })
-      .then(async fetchResponse => {
-        subscriber.next(fetchResponse);
-        subscriber.complete();
-      })
-      .catch((err: any) => {
-        if (err.name === "AbortError") {
-          return;
-        }
-        subscriber.error(err);
-      });
+    const controller = new ACtrl();
+    let complete = false;
 
-    return () => {
-      controller.abort();
-    };
+    function successfulFetch(fetchResponse: Response) {
+      complete = true;
+      subscriber.next(fetchResponse);
+      subscriber.complete();
+    }
+
+    function failedFetch(err: any) {
+      complete = true;
+      if (err.name === "AbortError") {
+        return;
+      }
+      console.error(`${err.name}`, err);
+      subscriber.error(err);
+    }
+
+    function unsubscribe() {
+      if (!complete) {
+        controller.abort();
+      }
+    }
+
+    isomorphicFetch(stringOrRequest, {
+      ...init,
+      signal: controller.signal,
+    }).then(successfulFetch, failedFetch);
+
+    return unsubscribe;
   });
 }
